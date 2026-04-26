@@ -52,7 +52,6 @@ defmodule SootAdmin.EnrollmentQueue do
   end
 
   attr :actor, :any, required: true
-  attr :tenant, :any, default: nil
   attr :query, :any, default: nil
   attr :id, :string, default: "soot-enrollment-queue"
 
@@ -60,12 +59,7 @@ defmodule SootAdmin.EnrollmentQueue do
     assigns = assign_new(assigns, :query, fn -> query() end)
 
     ~H"""
-    <Cinder.collection
-      id={@id}
-      query={@query}
-      actor={@actor}
-      tenant={@tenant}
-    >
+    <Cinder.collection id={@id} query={@query} actor={@actor}>
       <:col :let={device} field="serial" filter={:text} sort>{device.serial}</:col>
       <:col :let={device} field="state" filter={:select} sort>{device.state}</:col>
       <:col :let={device} field="tenant_id" filter={:text} sort>{device.tenant_id}</:col>

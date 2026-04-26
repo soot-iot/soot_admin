@@ -36,7 +36,7 @@ defmodule MyAppWeb.Admin.DevicesLive do
 
   def render(assigns) do
     ~H"""
-    <SootAdmin.DeviceTable.table actor={@current_user} tenant={@tenant} />
+    <SootAdmin.DeviceTable.table actor={@current_user} />
     """
   end
 end

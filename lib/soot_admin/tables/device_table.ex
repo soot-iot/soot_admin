@@ -82,7 +82,6 @@ defmodule SootAdmin.DeviceTable do
   end
 
   attr :actor, :any, required: true
-  attr :tenant, :any, default: nil
   attr :query, :any, default: nil
   attr :id, :string, default: "soot-device-table"
   attr :page_size, :integer, default: 25
@@ -96,7 +95,6 @@ defmodule SootAdmin.DeviceTable do
       id={@id}
       query={@query}
       actor={@actor}
-      tenant={@tenant}
       page_size={@page_size}
     >
       <:col :let={device} field="serial" filter={:text} sort>{device.serial}</:col>

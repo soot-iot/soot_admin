@@ -49,15 +49,32 @@ defmodule SootAdmin.CertificateTable do
 
   defp apply_status(query, opts) do
     case Keyword.get(opts, :status) do
-      nil -> query
-      status when is_atom(status) -> Ash.Query.filter(query, status == ^status)
+      nil ->
+        query
+
+      status when is_atom(status) ->
+        Ash.Query.filter(query, status == ^status)
+
+      status when is_binary(status) ->
+        Ash.Query.filter(query, status == ^to_existing_atom!(status, :status))
+
+      other ->
+        raise ArgumentError,
+              "CertificateTable.query/1 :status must be an atom or string, got: #{inspect(other)}"
     end
   end
 
   defp apply_issuer(query, opts) do
     case Keyword.get(opts, :issuer_id) do
-      nil -> query
-      id -> Ash.Query.filter(query, issuer_id == ^id)
+      nil ->
+        query
+
+      id when is_binary(id) ->
+        Ash.Query.filter(query, issuer_id == ^id)
+
+      other ->
+        raise ArgumentError,
+              "CertificateTable.query/1 :issuer_id must be a UUID string, got: #{inspect(other)}"
     end
   end
 
@@ -69,7 +86,20 @@ defmodule SootAdmin.CertificateTable do
       days when is_integer(days) ->
         cutoff = DateTime.utc_now() |> DateTime.add(days * 86_400, :second)
         Ash.Query.filter(query, not_after <= ^cutoff and status == :active)
+
+      other ->
+        raise ArgumentError,
+              "CertificateTable.query/1 :expiring_within_days must be an integer, got: #{inspect(other)}"
     end
+  end
+
+  defp to_existing_atom!(value, opt_name) do
+    String.to_existing_atom(value)
+  rescue
+    ArgumentError ->
+      reraise ArgumentError,
+              "CertificateTable.query/1 #{inspect(opt_name)} got unknown value #{inspect(value)}",
+              __STACKTRACE__
   end
 
   attr :actor, :any, required: true

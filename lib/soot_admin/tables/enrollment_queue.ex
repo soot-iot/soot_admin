@@ -46,8 +46,15 @@ defmodule SootAdmin.EnrollmentQueue do
 
   defp apply_tenant(query, opts) do
     case Keyword.get(opts, :tenant_id) do
-      nil -> query
-      id -> Ash.Query.filter(query, tenant_id == ^id)
+      nil ->
+        query
+
+      id when is_binary(id) ->
+        Ash.Query.filter(query, tenant_id == ^id)
+
+      other ->
+        raise ArgumentError,
+              "EnrollmentQueue.query/1 :tenant_id must be a UUID string, got: #{inspect(other)}"
     end
   end
 

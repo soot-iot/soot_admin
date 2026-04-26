@@ -65,16 +65,42 @@ defmodule SootAdmin.DeviceTable do
 
   defp apply_tenant(query, opts) do
     case Keyword.get(opts, :tenant_id) do
-      nil -> query
-      id -> Ash.Query.filter(query, tenant_id == ^id)
+      nil ->
+        query
+
+      id when is_binary(id) ->
+        Ash.Query.filter(query, tenant_id == ^id)
+
+      other ->
+        raise ArgumentError,
+              "DeviceTable.query/1 :tenant_id must be a UUID string, got: #{inspect(other)}"
     end
   end
 
   defp apply_state(query, opts) do
     case Keyword.get(opts, :state) do
-      nil -> query
-      state when is_atom(state) -> Ash.Query.filter(query, state == ^state)
+      nil ->
+        query
+
+      state when is_atom(state) ->
+        Ash.Query.filter(query, state == ^state)
+
+      state when is_binary(state) ->
+        Ash.Query.filter(query, state == ^to_existing_atom!(state, :state))
+
+      other ->
+        raise ArgumentError,
+              "DeviceTable.query/1 :state must be an atom or string, got: #{inspect(other)}"
     end
+  end
+
+  defp to_existing_atom!(value, opt_name) do
+    String.to_existing_atom(value)
+  rescue
+    ArgumentError ->
+      reraise ArgumentError,
+              "DeviceTable.query/1 #{inspect(opt_name)} got unknown value #{inspect(value)}",
+              __STACKTRACE__
   end
 
   attr :actor, :any, required: true

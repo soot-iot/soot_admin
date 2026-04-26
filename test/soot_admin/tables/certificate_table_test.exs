@@ -65,6 +65,17 @@ defmodule SootAdmin.CertificateTableTest do
     end
   end
 
+  test "query/1 :base_query is preserved through the certificate filters" do
+    require Ash.Query
+    base = Ash.Query.filter(AshPki.Certificate, subject_dn == "CN=Foo")
+
+    query = CertificateTable.query(base_query: base, status: :active)
+
+    f = inspect(query.filter)
+    assert f =~ "Foo"
+    assert f =~ "active"
+  end
+
   defp find_datetime(%DateTime{} = dt), do: dt
 
   defp find_datetime(value) when is_struct(value) do

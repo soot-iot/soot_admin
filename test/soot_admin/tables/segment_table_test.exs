@@ -22,4 +22,14 @@ defmodule SootAdmin.SegmentTableTest do
     query = SegmentTable.query()
     assert query.sort == [name: :asc]
   end
+
+  test "query/1 :base_query is preserved" do
+    require Ash.Query
+    base = Ash.Query.filter(SootSegments.SegmentRow, source_stream == "vibration")
+
+    query = SegmentTable.query(base_query: base)
+
+    assert inspect(query.filter) =~ "vibration"
+    assert query.sort == [name: :asc]
+  end
 end

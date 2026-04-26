@@ -35,4 +35,14 @@ defmodule SootAdmin.EnrollmentQueueTest do
     assert inspect(query.filter) =~ tenant_id
     assert inspect(query.filter) =~ "unprovisioned"
   end
+
+  test "query/1 :base_query is preserved through the queue filters" do
+    require Ash.Query
+    base = Ash.Query.filter(SootCore.Device, model == "BoxA")
+
+    query = EnrollmentQueue.query(base_query: base)
+
+    assert inspect(query.filter) =~ "BoxA"
+    assert inspect(query.filter) =~ "unprovisioned"
+  end
 end

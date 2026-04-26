@@ -33,4 +33,14 @@ defmodule SootAdmin.TelemetryStreamPanelTest do
     assert inspect(query.filter) =~ stream_id
     assert query.sort == [last_batch_at: :desc]
   end
+
+  test "query/1 :base_query is preserved" do
+    require Ash.Query
+    base = Ash.Query.filter(SootTelemetry.StreamRow, status == :active)
+
+    query = TelemetryStreamPanel.query(base_query: base)
+
+    assert inspect(query.filter) =~ "active"
+    assert query.sort == [name: :asc]
+  end
 end

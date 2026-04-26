@@ -13,6 +13,10 @@ defmodule SootAdmin.TelemetryStreamPanel do
   @spec resource() :: module()
   def resource, do: @resource
 
+  @doc """
+  Column specifications. This list is the documented source of truth
+  for what columns `table/1` renders — keep the HEEx in sync.
+  """
   @spec column_specs() :: [{atom(), keyword()}]
   def column_specs do
     [
@@ -55,7 +59,9 @@ defmodule SootAdmin.TelemetryStreamPanel do
       <:col :let={s} field="name" filter sort>{s.name}</:col>
       <:col :let={s} field="status" filter sort>{s.status}</:col>
       <:col :let={s} field="tenant_scope" filter>{s.tenant_scope}</:col>
+      <:col :let={s} field="current_schema_id">{s.current_schema_id}</:col>
       <:col :let={s} field="clickhouse_table">{s.clickhouse_table}</:col>
+      <:col :let={s} field="partitioning">{s.partitioning}</:col>
     </Cinder.collection>
     """
   end

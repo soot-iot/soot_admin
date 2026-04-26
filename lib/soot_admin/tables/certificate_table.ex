@@ -12,6 +12,10 @@ defmodule SootAdmin.CertificateTable do
   @spec resource() :: module()
   def resource, do: @resource
 
+  @doc """
+  Column specifications. This list is the documented source of truth
+  for what columns `table/1` renders — keep the HEEx in sync.
+  """
   @spec column_specs() :: [{atom(), keyword()}]
   def column_specs do
     [
@@ -79,9 +83,12 @@ defmodule SootAdmin.CertificateTable do
     <Cinder.collection id={@id} query={@query} actor={@actor}>
       <:col :let={c} field="subject_dn" filter sort>{c.subject_dn}</:col>
       <:col :let={c} field="status" filter sort>{c.status}</:col>
-      <:col :let={c} field="serial">{c.serial}</:col>
+      <:col :let={c} field="serial" filter>{c.serial}</:col>
+      <:col :let={c} field="fingerprint" filter>{c.fingerprint}</:col>
+      <:col :let={c} field="issuer_id">{c.issuer_id}</:col>
       <:col :let={c} field="not_after" sort>{c.not_after}</:col>
-      <:col :let={c} field="fingerprint">{c.fingerprint}</:col>
+      <:col :let={c} field="revoked_at">{c.revoked_at}</:col>
+      <:col :let={c} field="revocation_reason" filter>{c.revocation_reason}</:col>
     </Cinder.collection>
     """
   end

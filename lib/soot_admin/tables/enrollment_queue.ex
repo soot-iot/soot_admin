@@ -17,6 +17,10 @@ defmodule SootAdmin.EnrollmentQueue do
   @spec resource() :: module()
   def resource, do: @resource
 
+  @doc """
+  Column specifications. This list is the documented source of truth
+  for what columns `table/1` renders — keep the HEEx in sync.
+  """
   @spec column_specs() :: [{atom(), keyword()}]
   def column_specs do
     [
@@ -65,6 +69,7 @@ defmodule SootAdmin.EnrollmentQueue do
       <:col :let={device} field="serial" filter sort>{device.serial}</:col>
       <:col :let={device} field="state" filter sort>{device.state}</:col>
       <:col :let={device} field="tenant_id" filter sort>{device.tenant_id}</:col>
+      <:col :let={device} field="bootstrap_certificate_id">{device.bootstrap_certificate_id}</:col>
       <:col :let={device} field="inserted_at" sort>{device.inserted_at}</:col>
     </Cinder.collection>
     """

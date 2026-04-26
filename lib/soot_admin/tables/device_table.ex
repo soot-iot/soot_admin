@@ -31,6 +31,11 @@ defmodule SootAdmin.DeviceTable do
   @doc """
   Column specifications. Each entry is `{field, opts}`; opts mirror
   Cinder's column slot attrs (`filter:`, `sort:`, `label:`, `class:`).
+
+  This list is the documented source of truth for what columns the
+  `table/1` component is supposed to render. `table/1`'s HEEx must
+  declare a `<:col>` for every entry here; if you add or remove a
+  column here, update the HEEx in the same change.
   """
   @spec column_specs() :: [{atom(), keyword()}]
   def column_specs do
@@ -98,7 +103,9 @@ defmodule SootAdmin.DeviceTable do
       <:col :let={device} field="state" filter sort>{device.state}</:col>
       <:col :let={device} field="tenant_id" filter sort>{device.tenant_id}</:col>
       <:col :let={device} field="model" filter sort>{device.model}</:col>
+      <:col :let={device} field="batch_id" filter>{device.batch_id}</:col>
       <:col :let={device} field="last_seen_at" sort>{device.last_seen_at}</:col>
+      <:col :let={device} field="operational_certificate_id">{device.operational_certificate_id}</:col>
     </Cinder.collection>
     """
   end

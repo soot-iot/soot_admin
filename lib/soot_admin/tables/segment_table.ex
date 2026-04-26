@@ -17,6 +17,10 @@ defmodule SootAdmin.SegmentTable do
   @spec resource() :: module()
   def resource, do: @resource
 
+  @doc """
+  Column specifications. This list is the documented source of truth
+  for what columns `table/1` renders — keep the HEEx in sync.
+  """
   @spec column_specs() :: [{atom(), keyword()}]
   def column_specs do
     [
@@ -48,6 +52,7 @@ defmodule SootAdmin.SegmentTable do
       <:col :let={s} field="source_stream" filter sort>{s.source_stream}</:col>
       <:col :let={s} field="granularity" filter sort>{s.granularity}</:col>
       <:col :let={s} field="status" filter sort>{s.status}</:col>
+      <:col :let={s} field="current_version_id">{s.current_version_id}</:col>
       <:col :let={s} field="target">{s.target}</:col>
     </Cinder.collection>
     """

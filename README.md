@@ -67,7 +67,7 @@ already filters to `:unprovisioned`/`:bootstrapped`; pass `:tenant_id` to narrow
 
 ## Charting
 
-`SootAdmin.SegmentChart.chart_spec/2` returns `%{sql, columns, config}`
+`SootAdmin.SegmentChart.chart_spec/2` returns `%{sql, columns, chart_meta}`
 ready for an operator-supplied chart renderer:
 
 ```elixir
@@ -81,7 +81,7 @@ spec = SootAdmin.SegmentChart.chart_spec(MyApp.Segments.VibrationP95,
 The library deliberately does **not** ship a renderer — that depends on
 which JS chart lib (Chart.js, ECharts, ApexCharts…) the operator
 prefers. `chart_spec/2` produces enough metadata
-(`config.x_axis`/`config.y_axes`/`config.series_for`) for any of them.
+(`chart_meta.x_axis`/`chart_meta.y_axes`/`chart_meta.series_for`) for any of them.
 
 ## What this library is not
 

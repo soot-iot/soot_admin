@@ -9,8 +9,12 @@ defmodule SootAdmin.SegmentChart do
       %{
         sql: "<SELECT … with merge expressions>",
         columns: [%{name: :bucket, type: :datetime}, ...],
-        config: %{title: ..., x_axis: :bucket, y_axes: [...], series_for: [...]}
+        chart_meta: %{title: ..., x_axis: :bucket, y_axes: [...], series_for: [...]}
       }
+
+  `chart_meta` is operator-side metadata — title, axis assignments,
+  per-series aggregation kind — meant to be threaded into a JS chart
+  lib's config. It is **not** a Vega-Lite or Chart.js spec.
 
   Operators run the SQL through their ClickHouse client, then plot it
   with whatever chart component they prefer.
@@ -33,19 +37,29 @@ defmodule SootAdmin.SegmentChart do
     * `:title` — override the chart title.
     * `:x_axis` — column to use as the x axis. Default `:bucket`.
   """
-  @spec chart_spec(module(), keyword()) :: map()
+  @spec chart_spec(module(), keyword()) :: %{
+          sql: String.t(),
+          columns: [map()],
+          chart_meta: %{
+            title: String.t(),
+            x_axis: atom(),
+            y_axes: [atom()],
+            series_for: [%{name: atom(), kind: atom()}]
+          }
+        }
   def chart_spec(segment_module, opts \\ []) do
     sql = Query.sql(segment_module, opts)
     %{columns: columns} = Query.cinder(segment_module, opts)
 
     metrics =
-      Info.metrics(segment_module)
+      segment_module
+      |> Info.metrics()
       |> Enum.filter(&metric_in_opts?(&1, opts))
 
     %{
       sql: sql,
       columns: columns,
-      config: %{
+      chart_meta: %{
         title: Keyword.get(opts, :title, default_title(segment_module)),
         x_axis: Keyword.get(opts, :x_axis, :bucket),
         y_axes: Enum.map(metrics, & &1.name),
@@ -62,6 +76,6 @@ defmodule SootAdmin.SegmentChart do
   end
 
   defp default_title(module) do
-    "Segment " <> Atom.to_string(Info.name(module))
+    "Segment #{Info.name(module)}"
   end
 end

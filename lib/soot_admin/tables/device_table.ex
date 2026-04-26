@@ -110,7 +110,7 @@ defmodule SootAdmin.DeviceTable do
 
   @doc "Phoenix component wrapping `Cinder.collection` with the device columns."
   def table(assigns) do
-    assigns = assign_new(assigns, :query, fn -> query() end)
+    assigns = assign(assigns, :query, assigns[:query] || query())
 
     ~H"""
     <Cinder.collection

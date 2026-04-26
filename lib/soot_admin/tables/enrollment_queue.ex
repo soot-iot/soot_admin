@@ -32,7 +32,14 @@ defmodule SootAdmin.EnrollmentQueue do
     ]
   end
 
-  @doc "Base query — devices in :unprovisioned or :bootstrapped state."
+  @doc """
+  Base query — devices in :unprovisioned or :bootstrapped state.
+
+  Opts:
+    * `:tenant_id` — restrict to one tenant.
+    * `:base_query` — start from an existing `Ash.Query` instead of
+      `SootCore.Device`.
+  """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
     base = Keyword.get(opts, :base_query, Ash.Query.new(@resource))
@@ -61,12 +68,13 @@ defmodule SootAdmin.EnrollmentQueue do
   attr :actor, :any, required: true
   attr :query, :any, default: nil
   attr :id, :string, default: "soot-enrollment-queue"
+  attr :page_size, :integer, default: 25
 
   def table(assigns) do
-    assigns = assign_new(assigns, :query, fn -> query() end)
+    assigns = assign(assigns, :query, assigns[:query] || query())
 
     ~H"""
-    <Cinder.collection id={@id} query={@query} actor={@actor}>
+    <Cinder.collection id={@id} query={@query} actor={@actor} page_size={@page_size}>
       <:col :let={device} field="serial" filter={:text} sort>{device.serial}</:col>
       <:col :let={device} field="state" filter={:select} sort>{device.state}</:col>
       <:col :let={device} field="tenant_id" filter={:text} sort>{device.tenant_id}</:col>

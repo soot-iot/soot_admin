@@ -36,8 +36,8 @@ defmodule SootAdmin do
 
     bad =
       Enum.flat_map(specs, fn {field, _opts} ->
-        atom = if is_atom(field), do: field, else: String.to_atom(to_string(field))
-        if MapSet.member?(fields, atom), do: [], else: [{field, :unknown_field}]
+        atom = field_to_atom(field)
+        if atom != nil and MapSet.member?(fields, atom), do: [], else: [{field, :unknown_field}]
       end)
 
     case bad do
@@ -45,4 +45,14 @@ defmodule SootAdmin do
       _ -> {:error, bad}
     end
   end
+
+  defp field_to_atom(field) when is_atom(field), do: field
+
+  defp field_to_atom(field) when is_binary(field) do
+    String.to_existing_atom(field)
+  rescue
+    ArgumentError -> nil
+  end
+
+  defp field_to_atom(_), do: nil
 end

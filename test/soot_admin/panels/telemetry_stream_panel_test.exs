@@ -26,7 +26,7 @@ defmodule SootAdmin.TelemetryStreamPanelTest do
     assert query.sort == [name: :asc]
   end
 
-  test "ingest_sessions_query/2 filters to the given stream id" do
+  test "ingest_sessions_query/1 filters to the given stream id" do
     stream_id = Ecto.UUID.generate()
     query = TelemetryStreamPanel.ingest_sessions_query(stream_id)
     assert query.resource == SootTelemetry.IngestSession

@@ -33,6 +33,11 @@ defmodule SootAdmin.SegmentTable do
     ]
   end
 
+  @doc """
+  Base query sorted by name. Opts:
+    * `:base_query` — start from an existing `Ash.Query` instead of
+      `SootSegments.SegmentRow`.
+  """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
     base = Keyword.get(opts, :base_query, Ash.Query.new(@resource))
@@ -42,12 +47,13 @@ defmodule SootAdmin.SegmentTable do
   attr :actor, :any, required: true
   attr :query, :any, default: nil
   attr :id, :string, default: "soot-segments"
+  attr :page_size, :integer, default: 25
 
   def table(assigns) do
-    assigns = assign_new(assigns, :query, fn -> query() end)
+    assigns = assign(assigns, :query, assigns[:query] || query())
 
     ~H"""
-    <Cinder.collection id={@id} query={@query} actor={@actor}>
+    <Cinder.collection id={@id} query={@query} actor={@actor} page_size={@page_size}>
       <:col :let={s} field="name" filter={:text} sort>{s.name}</:col>
       <:col :let={s} field="source_stream" filter={:text} sort>{s.source_stream}</:col>
       <:col :let={s} field="granularity" filter={:select} sort>{s.granularity}</:col>

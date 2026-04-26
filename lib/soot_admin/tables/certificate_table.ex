@@ -35,6 +35,8 @@ defmodule SootAdmin.CertificateTable do
     * `:status` — restrict to one status (`:active`, `:revoked`, `:expired`).
     * `:issuer_id` — restrict to one issuing CA.
     * `:expiring_within_days` — only certs whose `not_after` is within N days.
+    * `:base_query` — start from an existing `Ash.Query` instead of
+      `AshPki.Certificate`.
   """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
@@ -105,12 +107,15 @@ defmodule SootAdmin.CertificateTable do
   attr :actor, :any, required: true
   attr :query, :any, default: nil
   attr :id, :string, default: "soot-certificate-table"
+  attr :page_size, :integer, default: 25
 
   def table(assigns) do
-    assigns = assign_new(assigns, :query, fn -> query() end)
+    assigns =
+      assigns
+      |> assign(:query, assigns[:query] || query())
 
     ~H"""
-    <Cinder.collection id={@id} query={@query} actor={@actor}>
+    <Cinder.collection id={@id} query={@query} actor={@actor} page_size={@page_size}>
       <:col :let={c} field="subject_dn" filter={:text} sort>{c.subject_dn}</:col>
       <:col :let={c} field="status" filter={:select} sort>{c.status}</:col>
       <:col :let={c} field="serial" filter={:text}>{c.serial}</:col>

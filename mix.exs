@@ -77,6 +77,7 @@ defmodule SootAdmin.MixProject do
       {:soot_segments, path: "../soot_segments"},
       {:cinder, "~> 0.12"},
       {:phoenix_live_view, "~> 1.0"},
+      {:igniter, "~> 0.6", optional: true},
       {:jason, "~> 1.4"},
 
       # Dev / test

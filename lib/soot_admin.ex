@@ -23,9 +23,9 @@ defmodule SootAdmin do
   """
 
   @doc """
-  Validate that every column spec references an attribute or
-  calculation that actually exists on the underlying Ash resource.
-  Returns `:ok` or `{:error, [{field, reason}, …]}`.
+  Validate that every column spec references an attribute that
+  actually exists on the underlying Ash resource. Returns `:ok` or
+  `{:error, [{field, reason}, …]}`.
   """
   @spec validate_columns(module(), [{atom() | String.t(), keyword()}]) ::
           :ok | {:error, [{atom() | String.t(), term()}]}

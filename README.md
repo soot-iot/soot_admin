@@ -99,12 +99,12 @@ prefers. `chart_spec/2` produces enough metadata
 mix test
 ```
 
-29 tests cover the column specs reference real attributes on every
+Tests cover that every column spec references a real attribute on the
 underlying resource, every documented `query/1` filter option produces
-the expected `Ash.Query` predicate, sort orders match the
-operator-facing assumption (e.g. `CertificateTable` sorts by `not_after`
-asc so soonest-expiring rises), `TelemetryStreamPanel.ingest_sessions_query/2`
-narrows correctly, and `SegmentChart.chart_spec/2` defaults the title
-from the segment name, builds y-axes from every metric (or a subset
-when `:metrics` opt is passed), and stamps the aggregation kind into
-`series_for`.
+the expected `Ash.Query` predicate (including the `:expiring_within_days`
+cutoff math), sort orders match the operator-facing assumption (e.g.
+`CertificateTable` sorts by `not_after` asc so soonest-expiring rises),
+`TelemetryStreamPanel.ingest_sessions_query/1` narrows correctly,
+`SegmentChart.chart_spec/2` forwards every option to the underlying
+`SootSegments.Query`, and every `table/1` component renders all the
+columns declared in its `column_specs/0`.

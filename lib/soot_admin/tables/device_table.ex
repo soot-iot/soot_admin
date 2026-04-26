@@ -7,15 +7,11 @@ defmodule SootAdmin.DeviceTable do
 
   ## Operator use
 
-      <.live_component
-        module={SootAdmin.DeviceTable}
-        id="device-table"
-        actor={@current_user}
-      />
+      <SootAdmin.DeviceTable.table actor={@current_user} />
 
   Or, with a base filter (e.g. only this tenant's devices):
 
-      query = SootAdmin.DeviceTable.query(actor: @current_user, tenant_id: @tenant.id)
+      query = SootAdmin.DeviceTable.query(tenant_id: @tenant.id)
       <SootAdmin.DeviceTable.table query={query} actor={@current_user} />
   """
 

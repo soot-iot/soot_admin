@@ -56,7 +56,8 @@ defmodule SootAdmin.MixProject do
   defp aliases do
     [
       format: "format --migrate",
-      credo: "credo --strict"
+      credo: "credo --strict",
+      lint: ["format --check-formatted", "credo --strict", "sobelow"]
     ]
   end
 
@@ -69,7 +70,13 @@ defmodule SootAdmin.MixProject do
       {:soot_segments, path: "../soot_segments"},
       {:cinder, "~> 0.12"},
       {:phoenix_live_view, "~> 1.0"},
-      {:jason, "~> 1.4"}
+      {:jason, "~> 1.4"},
+
+      # Dev / test
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.34", only: [:dev], runtime: false},
+      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false}
     ]
   end
 end

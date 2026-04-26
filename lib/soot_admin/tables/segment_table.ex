@@ -48,10 +48,10 @@ defmodule SootAdmin.SegmentTable do
 
     ~H"""
     <Cinder.collection id={@id} query={@query} actor={@actor}>
-      <:col :let={s} field="name" filter sort>{s.name}</:col>
-      <:col :let={s} field="source_stream" filter sort>{s.source_stream}</:col>
-      <:col :let={s} field="granularity" filter sort>{s.granularity}</:col>
-      <:col :let={s} field="status" filter sort>{s.status}</:col>
+      <:col :let={s} field="name" filter={:text} sort>{s.name}</:col>
+      <:col :let={s} field="source_stream" filter={:text} sort>{s.source_stream}</:col>
+      <:col :let={s} field="granularity" filter={:select} sort>{s.granularity}</:col>
+      <:col :let={s} field="status" filter={:select} sort>{s.status}</:col>
       <:col :let={s} field="current_version_id">{s.current_version_id}</:col>
       <:col :let={s} field="target">{s.target}</:col>
     </Cinder.collection>

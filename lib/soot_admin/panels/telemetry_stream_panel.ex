@@ -56,9 +56,9 @@ defmodule SootAdmin.TelemetryStreamPanel do
 
     ~H"""
     <Cinder.collection id={@id} query={@query} actor={@actor}>
-      <:col :let={s} field="name" filter sort>{s.name}</:col>
-      <:col :let={s} field="status" filter sort>{s.status}</:col>
-      <:col :let={s} field="tenant_scope" filter>{s.tenant_scope}</:col>
+      <:col :let={s} field="name" filter={:text} sort>{s.name}</:col>
+      <:col :let={s} field="status" filter={:select} sort>{s.status}</:col>
+      <:col :let={s} field="tenant_scope" filter={:select}>{s.tenant_scope}</:col>
       <:col :let={s} field="current_schema_id">{s.current_schema_id}</:col>
       <:col :let={s} field="clickhouse_table">{s.clickhouse_table}</:col>
       <:col :let={s} field="partitioning">{s.partitioning}</:col>

@@ -99,13 +99,15 @@ defmodule SootAdmin.DeviceTable do
       tenant={@tenant}
       page_size={@page_size}
     >
-      <:col :let={device} field="serial" filter sort>{device.serial}</:col>
-      <:col :let={device} field="state" filter sort>{device.state}</:col>
-      <:col :let={device} field="tenant_id" filter sort>{device.tenant_id}</:col>
-      <:col :let={device} field="model" filter sort>{device.model}</:col>
-      <:col :let={device} field="batch_id" filter>{device.batch_id}</:col>
+      <:col :let={device} field="serial" filter={:text} sort>{device.serial}</:col>
+      <:col :let={device} field="state" filter={:select} sort>{device.state}</:col>
+      <:col :let={device} field="tenant_id" filter={:text} sort>{device.tenant_id}</:col>
+      <:col :let={device} field="model" filter={:text} sort>{device.model}</:col>
+      <:col :let={device} field="batch_id" filter={:text}>{device.batch_id}</:col>
       <:col :let={device} field="last_seen_at" sort>{device.last_seen_at}</:col>
-      <:col :let={device} field="operational_certificate_id">{device.operational_certificate_id}</:col>
+      <:col :let={device} field="operational_certificate_id">
+        {device.operational_certificate_id}
+      </:col>
     </Cinder.collection>
     """
   end

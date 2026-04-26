@@ -66,9 +66,9 @@ defmodule SootAdmin.EnrollmentQueue do
       actor={@actor}
       tenant={@tenant}
     >
-      <:col :let={device} field="serial" filter sort>{device.serial}</:col>
-      <:col :let={device} field="state" filter sort>{device.state}</:col>
-      <:col :let={device} field="tenant_id" filter sort>{device.tenant_id}</:col>
+      <:col :let={device} field="serial" filter={:text} sort>{device.serial}</:col>
+      <:col :let={device} field="state" filter={:select} sort>{device.state}</:col>
+      <:col :let={device} field="tenant_id" filter={:text} sort>{device.tenant_id}</:col>
       <:col :let={device} field="bootstrap_certificate_id">{device.bootstrap_certificate_id}</:col>
       <:col :let={device} field="inserted_at" sort>{device.inserted_at}</:col>
     </Cinder.collection>

@@ -42,4 +42,46 @@ defmodule SootAdmin.CertificateTableTest do
     assert f =~ "not_after"
     assert f =~ "active"
   end
+
+  test "query/1 :expiring_within_days computes the cutoff as now + N*86_400 seconds" do
+    days = 7
+    before = DateTime.utc_now()
+    query = CertificateTable.query(expiring_within_days: days)
+    aft = DateTime.utc_now()
+
+    cutoff = find_datetime(query.filter)
+    assert %DateTime{} = cutoff
+
+    expected_lower = DateTime.add(before, days * 86_400, :second)
+    expected_upper = DateTime.add(aft, days * 86_400, :second)
+
+    assert DateTime.compare(cutoff, expected_lower) in [:eq, :gt]
+    assert DateTime.compare(cutoff, expected_upper) in [:eq, :lt]
+  end
+
+  test "query/1 :expiring_within_days raises ArgumentError on non-integer input" do
+    assert_raise ArgumentError, ~r/:expiring_within_days/, fn ->
+      CertificateTable.query(expiring_within_days: "30")
+    end
+  end
+
+  defp find_datetime(%DateTime{} = dt), do: dt
+
+  defp find_datetime(value) when is_struct(value) do
+    value
+    |> Map.from_struct()
+    |> Enum.find_value(&find_datetime/1)
+  end
+
+  defp find_datetime(value) when is_map(value) do
+    Enum.find_value(value, &find_datetime/1)
+  end
+
+  defp find_datetime({_key, value}), do: find_datetime(value)
+
+  defp find_datetime(value) when is_list(value) do
+    Enum.find_value(value, &find_datetime/1)
+  end
+
+  defp find_datetime(_), do: nil
 end

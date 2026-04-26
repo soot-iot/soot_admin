@@ -76,13 +76,13 @@ defmodule SootAdmin.CertificateTable do
     assigns = assign_new(assigns, :query, fn -> query() end)
 
     ~H"""
-    <Cinder.Table.table id={@id} query={@query} actor={@actor}>
+    <Cinder.collection id={@id} query={@query} actor={@actor}>
       <:col :let={c} field="subject_dn" filter sort>{c.subject_dn}</:col>
       <:col :let={c} field="status" filter sort>{c.status}</:col>
       <:col :let={c} field="serial">{c.serial}</:col>
       <:col :let={c} field="not_after" sort>{c.not_after}</:col>
       <:col :let={c} field="fingerprint">{c.fingerprint}</:col>
-    </Cinder.Table.table>
+    </Cinder.collection>
     """
   end
 end

@@ -8,7 +8,7 @@ defmodule SootAdmin do
     * `resource/0`, `query/1`, `column_specs/0` — plain-data getters the
       operator can compose with their own LiveView. Easily testable.
     * a Phoenix component (`table/1` or similar) — a thin wrapper around
-      `Cinder.Table.table` with the right `:col` slots pre-baked.
+      `Cinder.collection` with the right `:col` slots pre-baked.
 
   Operators mount these into their own Phoenix LiveView app — this
   library does not own routing, auth, layout, or theme.

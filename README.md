@@ -25,7 +25,7 @@ Each table module exposes:
 DeviceTable.resource()       # underlying Ash resource module
 DeviceTable.column_specs()   # list of {field, opts} for the operator's reference
 DeviceTable.query(opts)      # Ash.Query.t() with the table's defaults applied
-DeviceTable.table(assigns)   # Phoenix component wrapping Cinder.Table.table
+DeviceTable.table(assigns)   # Phoenix component wrapping Cinder.collection
 ```
 
 ## Use in an operator LiveView

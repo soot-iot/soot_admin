@@ -82,12 +82,12 @@ defmodule SootAdmin.DeviceTable do
   attr :id, :string, default: "soot-device-table"
   attr :page_size, :integer, default: 25
 
-  @doc "Phoenix component wrapping a `Cinder.Table` with the device columns."
+  @doc "Phoenix component wrapping `Cinder.collection` with the device columns."
   def table(assigns) do
     assigns = assign_new(assigns, :query, fn -> query() end)
 
     ~H"""
-    <Cinder.Table.table
+    <Cinder.collection
       id={@id}
       query={@query}
       actor={@actor}
@@ -99,7 +99,7 @@ defmodule SootAdmin.DeviceTable do
       <:col :let={device} field="tenant_id" filter sort>{device.tenant_id}</:col>
       <:col :let={device} field="model" filter sort>{device.model}</:col>
       <:col :let={device} field="last_seen_at" sort>{device.last_seen_at}</:col>
-    </Cinder.Table.table>
+    </Cinder.collection>
     """
   end
 end

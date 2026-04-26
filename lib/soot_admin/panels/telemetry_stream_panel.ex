@@ -51,12 +51,12 @@ defmodule SootAdmin.TelemetryStreamPanel do
     assigns = assign_new(assigns, :query, fn -> query() end)
 
     ~H"""
-    <Cinder.Table.table id={@id} query={@query} actor={@actor}>
+    <Cinder.collection id={@id} query={@query} actor={@actor}>
       <:col :let={s} field="name" filter sort>{s.name}</:col>
       <:col :let={s} field="status" filter sort>{s.status}</:col>
       <:col :let={s} field="tenant_scope" filter>{s.tenant_scope}</:col>
       <:col :let={s} field="clickhouse_table">{s.clickhouse_table}</:col>
-    </Cinder.Table.table>
+    </Cinder.collection>
     """
   end
 end

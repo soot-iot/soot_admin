@@ -56,7 +56,7 @@ defmodule SootAdmin.EnrollmentQueue do
     assigns = assign_new(assigns, :query, fn -> query() end)
 
     ~H"""
-    <Cinder.Table.table
+    <Cinder.collection
       id={@id}
       query={@query}
       actor={@actor}
@@ -66,7 +66,7 @@ defmodule SootAdmin.EnrollmentQueue do
       <:col :let={device} field="state" filter sort>{device.state}</:col>
       <:col :let={device} field="tenant_id" filter sort>{device.tenant_id}</:col>
       <:col :let={device} field="inserted_at" sort>{device.inserted_at}</:col>
-    </Cinder.Table.table>
+    </Cinder.collection>
     """
   end
 end

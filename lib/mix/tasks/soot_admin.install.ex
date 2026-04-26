@@ -301,7 +301,7 @@ if Code.ensure_loaded?(Igniter) do
     end
 
     defp liveview_body(:telemetry) do
-      ~s|    <SootAdmin.TelemetryStreamPanel.panel actor={@current_user} />|
+      ~s|    <SootAdmin.TelemetryStreamPanel.table actor={@current_user} />|
     end
 
     defp liveview_body(:segments) do

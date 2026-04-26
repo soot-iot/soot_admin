@@ -4,7 +4,7 @@ defmodule SootAdmin.Test.Fixtures.VibrationStream do
 
   telemetry_stream do
     name :vibration
-    tenant_scope :per_tenant
+    tenant_scope(:per_tenant)
 
     fields do
       field :ts, :timestamp_us, required: true
@@ -15,7 +15,7 @@ defmodule SootAdmin.Test.Fixtures.VibrationStream do
     end
 
     clickhouse do
-      order_by [:tenant_id, :device_id, :ts]
+      order_by([:tenant_id, :device_id, :ts])
     end
   end
 end
@@ -26,17 +26,17 @@ defmodule SootAdmin.Test.Fixtures.VibrationP95Segment do
 
   segment do
     name :vibration_p95
-    source_stream :vibration
-    granularity :hour
+    source_stream(:vibration)
+    granularity(:hour)
 
     dimensions do
-      dimension :tenant_id
-      dimension :device_id
+      dimension(:tenant_id)
+      dimension(:device_id)
     end
 
     metrics do
-      metric :axis_x_p95, :quantile, column: :axis_x, q: 0.95
-      metric :samples, :count
+      metric(:axis_x_p95, :quantile, column: :axis_x, q: 0.95)
+      metric(:samples, :count)
     end
   end
 end

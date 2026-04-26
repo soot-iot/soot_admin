@@ -12,7 +12,11 @@ defmodule SootAdmin.EnrollmentQueueTest do
   end
 
   test "column_specs reference real Device attributes" do
-    assert :ok = SootAdmin.validate_columns(EnrollmentQueue.resource(), EnrollmentQueue.column_specs())
+    assert :ok =
+             SootAdmin.validate_columns(
+               EnrollmentQueue.resource(),
+               EnrollmentQueue.column_specs()
+             )
   end
 
   test "query/0 filters to :unprovisioned and :bootstrapped, sorted oldest-first" do

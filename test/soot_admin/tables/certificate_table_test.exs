@@ -13,7 +13,11 @@ defmodule SootAdmin.CertificateTableTest do
   end
 
   test "column_specs reference real Certificate attributes" do
-    assert :ok = SootAdmin.validate_columns(CertificateTable.resource(), CertificateTable.column_specs())
+    assert :ok =
+             SootAdmin.validate_columns(
+               CertificateTable.resource(),
+               CertificateTable.column_specs()
+             )
   end
 
   test "query/0 sorts by not_after asc so soonest-to-expire surfaces first" do

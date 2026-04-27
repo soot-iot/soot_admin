@@ -71,10 +71,10 @@ defmodule SootAdmin.MixProject do
   defp deps do
     [
       {:ash, "~> 3.24"},
-      {:ash_pki, path: "../ash_pki"},
-      {:soot_core, path: "../soot_core"},
-      {:soot_telemetry, path: "../soot_telemetry"},
-      {:soot_segments, path: "../soot_segments"},
+      {:ash_pki, github: "soot-iot/ash_pki", branch: "main", override: true},
+      {:soot_core, github: "soot-iot/soot_core", branch: "main", override: true},
+      {:soot_telemetry, github: "soot-iot/soot_telemetry", branch: "main", override: true},
+      {:soot_segments, github: "soot-iot/soot_segments", branch: "main", override: true},
       {:cinder, "~> 0.12"},
       {:phoenix_live_view, "~> 1.0"},
       {:igniter, "~> 0.6", optional: true},

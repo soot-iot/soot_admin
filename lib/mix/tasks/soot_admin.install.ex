@@ -87,42 +87,47 @@ if Code.ensure_loaded?(Igniter) do
           "Which Phoenix router should the Soot admin LiveViews be mounted in?"
         )
 
-      if router do
-        web_module = Igniter.Libs.Phoenix.web_module(igniter)
-        live_user_auth = Module.concat([web_module, "LiveUserAuth"])
+      cond do
+        is_nil(router) ->
+          Igniter.add_warning(igniter, """
+          No Phoenix router found. The Soot admin LiveViews were not
+          mounted. Set up a Phoenix router and re-run
+          `mix igniter.install soot_admin`.
+          """)
 
-        if admin_scope_present?(igniter, router) do
+        admin_scope_present?(igniter, router) ->
           igniter
-        else
-          live_routes =
-            Enum.map_join(@admin_pages, "\n", fn {_id, _label, path, mod} ->
-              ~s|      live #{inspect(path)}, Admin.#{mod}, :index|
-            end)
 
-          scope_body = """
-          pipe_through :browser
-
-          ash_authentication_live_session :soot_admin,
-            on_mount: [{#{inspect(live_user_auth)}, :live_user_required}] do
-          #{live_routes}
-          end
-          """
-
-          Igniter.Libs.Phoenix.add_scope(
-            igniter,
-            "/admin",
-            scope_body,
-            arg2: web_module,
-            router: router
-          )
-        end
-      else
-        Igniter.add_warning(igniter, """
-        No Phoenix router found. The Soot admin LiveViews were not
-        mounted. Set up a Phoenix router and re-run
-        `mix igniter.install soot_admin`.
-        """)
+        true ->
+          mount_admin_scope(igniter, router)
       end
+    end
+
+    defp mount_admin_scope(igniter, router) do
+      web_module = Igniter.Libs.Phoenix.web_module(igniter)
+      live_user_auth = Module.concat([web_module, "LiveUserAuth"])
+
+      live_routes =
+        Enum.map_join(@admin_pages, "\n", fn {_id, _label, path, mod} ->
+          ~s|      live #{inspect(path)}, Admin.#{mod}, :index|
+        end)
+
+      scope_body = """
+      pipe_through :browser
+
+      ash_authentication_live_session :soot_admin,
+        on_mount: [{#{inspect(live_user_auth)}, :live_user_required}] do
+      #{live_routes}
+      end
+      """
+
+      Igniter.Libs.Phoenix.add_scope(
+        igniter,
+        "/admin",
+        scope_body,
+        arg2: web_module,
+        router: router
+      )
     end
 
     # The /admin scope is uniquely identifiable by the

@@ -246,7 +246,13 @@ if Code.ensure_loaded?(Igniter) do
       end)
     end
 
-    defp create_admin_liveview(igniter, {id, title, _path, mod}, web_module, layouts, live_user_auth) do
+    defp create_admin_liveview(
+           igniter,
+           {id, title, _path, mod},
+           web_module,
+           layouts,
+           live_user_auth
+         ) do
       module = Module.concat([web_module, "Admin", mod])
 
       body = liveview_body(id)

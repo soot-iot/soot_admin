@@ -54,6 +54,31 @@ defmodule Mix.Tasks.SootAdmin.InstallTest do
       assert info.schema == [example: :boolean, yes: :boolean]
       assert info.aliases == [y: :yes, e: :example]
     end
+
+    test "composes cinder.install" do
+      # Cinder owns the Tailwind content-path wiring and the
+      # `:cinder, :default_theme` config. Without that the admin
+      # tables compile but render unstyled — the operator's Tailwind
+      # build never sees the classes Cinder emits.
+      info = Mix.Tasks.SootAdmin.Install.info([], nil)
+      assert "cinder.install" in info.composes
+    end
+  end
+
+  describe "cinder wiring" do
+    test "configures the cinder default_theme in config.exs" do
+      # Side effect of `cinder.install`: a `config :cinder,
+      # default_theme: "modern"` line gets injected into config.exs.
+      # We don't care about the exact value (operators can override),
+      # just that the wiring fired.
+      result =
+        setup_project()
+        |> Igniter.compose_task("soot_admin.install", [])
+
+      diff = diff(result, only: "config/config.exs")
+      assert diff =~ ":cinder"
+      assert diff =~ "default_theme"
+    end
   end
 
   describe "router patching" do

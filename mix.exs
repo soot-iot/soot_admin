@@ -77,6 +77,11 @@ defmodule SootAdmin.MixProject do
       {:soot_segments, github: "soot-iot/soot_segments", branch: "main", override: true},
       {:cinder, "~> 0.12"},
       {:phoenix_live_view, "~> 1.0"},
+      # Brings the `ash_authentication_live_session` macro the
+      # generated `/admin` scope uses, plus the install task that
+      # `mix soot.install` composes to wire it into the operator's
+      # router.
+      {:ash_authentication_phoenix, "~> 2.16"},
       {:igniter, "~> 0.6", optional: true},
       {:jason, "~> 1.4"},
 

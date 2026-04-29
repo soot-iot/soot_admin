@@ -62,7 +62,7 @@ if Code.ensure_loaded?(Igniter) do
         group: :soot,
         example: __MODULE__.Docs.example(),
         only: nil,
-        composes: [],
+        composes: ["cinder.install"],
         schema: [example: :boolean, yes: :boolean],
         defaults: [example: false, yes: false],
         aliases: [y: :yes, e: :example]
@@ -73,11 +73,33 @@ if Code.ensure_loaded?(Igniter) do
     def igniter(igniter) do
       igniter
       |> Igniter.Project.Formatter.import_dep(:soot_admin)
+      |> compose_cinder_install()
       |> add_admin_routes()
       |> create_admin_layout()
       |> create_admin_nav()
       |> create_admin_liveviews()
       |> note_next_steps()
+    end
+
+    # Cinder ships with `cinder.install` (Tailwind content paths,
+    # `:cinder, :default_theme` config). soot_admin's LiveView
+    # components are thin wrappers around `Cinder.collection`, so
+    # without that wiring the admin pages compile but render unstyled
+    # — the operator's Tailwind build never sees the classes Cinder
+    # emits. `cinder` is already a runtime dep of soot_admin, so the
+    # task is loaded; it's idempotent, so re-runs are cheap.
+    defp compose_cinder_install(igniter) do
+      if Mix.Task.get("cinder.install") do
+        Igniter.compose_task(igniter, "cinder.install", igniter.args.argv)
+      else
+        Igniter.add_warning(igniter, """
+        Skipping `mix cinder.install` — the task is not available.
+        Cinder is a runtime dep of soot_admin, so this is unexpected.
+        The admin tables may render unstyled until Tailwind is
+        configured to scan `deps/cinder/**` and a default theme is
+        set in config (`config :cinder, default_theme: "modern"`).
+        """)
+      end
     end
 
     defp add_admin_routes(igniter) do

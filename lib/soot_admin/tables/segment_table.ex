@@ -12,10 +12,13 @@ defmodule SootAdmin.SegmentTable do
   use Phoenix.Component
   require Ash.Query
 
-  @resource SootSegments.SegmentRow
-
+  @doc """
+  Underlying Ash resource. Resolves at runtime via
+  `SootSegments.segment_row/0` so the table follows
+  `config :soot_segments, segment_row: MyApp.SegmentRow`.
+  """
   @spec resource() :: module()
-  def resource, do: @resource
+  def resource, do: SootSegments.segment_row()
 
   @doc """
   Column specifications. This list is the documented source of truth
@@ -40,7 +43,7 @@ defmodule SootAdmin.SegmentTable do
   """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
-    base = Keyword.get(opts, :base_query, Ash.Query.new(@resource))
+    base = Keyword.get(opts, :base_query, Ash.Query.new(resource()))
     Ash.Query.sort(base, name: :asc)
   end
 

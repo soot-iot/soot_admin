@@ -18,11 +18,15 @@ defmodule SootAdmin.DeviceTable do
   use Phoenix.Component
   require Ash.Query
 
-  @resource SootCore.Device
+  @doc """
+  Underlying Ash resource.
 
-  @doc "Underlying Ash resource."
+  Resolves at runtime via `SootCore.device/0` so the table follows the
+  operator's `config :soot_core, device: MyApp.Device` override
+  instead of pinning to the ETS-backed library default.
+  """
   @spec resource() :: module()
-  def resource, do: @resource
+  def resource, do: SootCore.device()
 
   @doc """
   Column specifications. Each entry is `{field, opts}`; opts mirror
@@ -55,7 +59,7 @@ defmodule SootAdmin.DeviceTable do
   """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
-    base = Keyword.get(opts, :base_query, Ash.Query.new(@resource))
+    base = Keyword.get(opts, :base_query, Ash.Query.new(resource()))
 
     base
     |> apply_tenant(opts)

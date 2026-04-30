@@ -7,10 +7,12 @@ defmodule SootAdmin.CertificateTable do
   use Phoenix.Component
   require Ash.Query
 
-  @resource AshPki.Certificate
-
+  @doc """
+  Underlying Ash resource. Resolves at runtime via `AshPki.certificate/0`
+  so the table follows `config :ash_pki, certificate: MyApp.Certificate`.
+  """
   @spec resource() :: module()
-  def resource, do: @resource
+  def resource, do: AshPki.certificate()
 
   @doc """
   Column specifications. This list is the documented source of truth
@@ -40,7 +42,7 @@ defmodule SootAdmin.CertificateTable do
   """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
-    base = Keyword.get(opts, :base_query, Ash.Query.new(@resource))
+    base = Keyword.get(opts, :base_query, Ash.Query.new(resource()))
 
     base
     |> apply_status(opts)

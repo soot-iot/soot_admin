@@ -12,10 +12,12 @@ defmodule SootAdmin.EnrollmentQueue do
   use Phoenix.Component
   require Ash.Query
 
-  @resource SootCore.Device
-
+  @doc """
+  Underlying Ash resource. Resolves at runtime via `SootCore.device/0`
+  so the queue follows `config :soot_core, device: MyApp.Device`.
+  """
   @spec resource() :: module()
-  def resource, do: @resource
+  def resource, do: SootCore.device()
 
   @doc """
   Column specifications. This list is the documented source of truth
@@ -42,7 +44,7 @@ defmodule SootAdmin.EnrollmentQueue do
   """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
-    base = Keyword.get(opts, :base_query, Ash.Query.new(@resource))
+    base = Keyword.get(opts, :base_query, Ash.Query.new(resource()))
     queue_states = [:unprovisioned, :bootstrapped]
 
     base

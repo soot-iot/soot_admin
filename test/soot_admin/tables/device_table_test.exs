@@ -1,10 +1,20 @@
 defmodule SootAdmin.DeviceTableTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   alias SootAdmin.DeviceTable
 
-  test "resource/0 returns SootCore.Device" do
+  test "resource/0 returns the library default when no override is configured" do
     assert DeviceTable.resource() == SootCore.Device
+  end
+
+  test "resource/0 follows config :soot_core, device: …" do
+    Application.put_env(:soot_core, :device, FakeApp.Device)
+
+    try do
+      assert DeviceTable.resource() == FakeApp.Device
+    after
+      Application.delete_env(:soot_core, :device)
+    end
   end
 
   test "column_specs/0 includes the expected operator-facing fields" do

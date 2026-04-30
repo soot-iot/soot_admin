@@ -8,10 +8,13 @@ defmodule SootAdmin.TelemetryStreamPanel do
   use Phoenix.Component
   require Ash.Query
 
-  @resource SootTelemetry.StreamRow
-
+  @doc """
+  Underlying Ash resource. Resolves at runtime via
+  `SootTelemetry.stream_row/0` so the panel follows
+  `config :soot_telemetry, stream_row: MyApp.StreamRow`.
+  """
   @spec resource() :: module()
-  def resource, do: @resource
+  def resource, do: SootTelemetry.stream_row()
 
   @doc """
   Column specifications. This list is the documented source of truth
@@ -36,17 +39,18 @@ defmodule SootAdmin.TelemetryStreamPanel do
   """
   @spec query(keyword()) :: Ash.Query.t()
   def query(opts \\ []) do
-    base = Keyword.get(opts, :base_query, Ash.Query.new(@resource))
+    base = Keyword.get(opts, :base_query, Ash.Query.new(resource()))
     Ash.Query.sort(base, name: :asc)
   end
 
   @doc """
   Build a query for ingest sessions on a given stream. Useful in a
-  detail panel below the streams table.
+  detail panel below the streams table. Resolves IngestSession at
+  runtime via `SootTelemetry.ingest_session/0`.
   """
   @spec ingest_sessions_query(stream_id :: Ash.UUID.t()) :: Ash.Query.t()
   def ingest_sessions_query(stream_id) do
-    SootTelemetry.IngestSession
+    SootTelemetry.ingest_session()
     |> Ash.Query.filter(stream_id == ^stream_id)
     |> Ash.Query.sort(last_batch_at: :desc)
   end

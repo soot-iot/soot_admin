@@ -24,6 +24,10 @@ defmodule SootAdmin.MixProject do
         plt_local_path: "priv/plts",
         ignore_warnings: ".dialyzer_ignore.exs",
         list_unused_filters?: true
+      ],
+      usage_rules: [
+        file: "AGENTS.md",
+        usage_rules: [:ash, :igniter, :usage_rules]
       ]
     ]
   end
@@ -90,7 +94,8 @@ defmodule SootAdmin.MixProject do
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.34", only: [:dev], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false}
+      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
+      {:usage_rules, "~> 1.2", only: [:dev], runtime: false}
     ]
   end
 end
